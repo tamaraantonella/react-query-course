@@ -4,6 +4,9 @@ import "./index.css";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import { worker } from "@uidotdev/react-query-api";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+
+const queryClient = new QueryClient();
 
 new Promise((res) => setTimeout(res, 100))
   .then(() =>
@@ -15,11 +18,13 @@ new Promise((res) => setTimeout(res, 100))
   .then(() => {
     ReactDOM.render(
       <React.StrictMode>
+        <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <div className="container">
             <App />
           </div>
-        </BrowserRouter>
+          </BrowserRouter>
+        </QueryClientProvider>
       </React.StrictMode>,
       document.getElementById("root")
     );
