@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { GoIssueClosed, GoIssueOpened, GoComment } from "react-icons/go";
 import { relativeDate } from "../helpers/relativeDate";
+import { useUserData } from "../helpers/useUserData";
+import { Label } from "./Label";
 
 export function IssueItem({
   title,
@@ -12,6 +14,8 @@ export function IssueItem({
   labels,
   status,
 }) {
+  const assigneeUser = useUserData(assignee);
+  const createdByUser = useUserData(createdBy);
   return (
     <li>
       <div>
@@ -25,19 +29,26 @@ export function IssueItem({
         <span>
           <Link to={`/issues/${number}`}>{title}</Link>
           {labels.map((label) => (
-            <span
+            <Label
               key={label}
-              className="label red">
-              {label}
-            </span>
+              label={label}
+            />
           ))}
         </span>
         <small>
           {" "}
-          #{number} opened {relativeDate(createdDate)} by {createdBy}
+          #{number} opened {relativeDate(createdDate)} by{" "}
+          {createdByUser.isSuccess ? createdByUser?.data.name : null}
         </small>
       </div>
-      {assignee ? <div>{assignee}</div> : null}
+      {assignee ? (
+        <img
+          className="assigned-to"
+          src={
+            assigneeUser.isSuccess ? assigneeUser.data.profilePictureUrl : null
+          }
+        />
+      ) : null}
       <span className="comment-count">
         {commentCount > 0 ? (
           <>
